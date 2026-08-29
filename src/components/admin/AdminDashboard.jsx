@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLang } from '../../context/LanguageContext';
 import AddEntryDrawer from './AddEntryDrawer';
 import ReceiptModal from '../shared/ReceiptModal';
 import TransactionCard from '../shared/TransactionCard';
@@ -28,6 +29,7 @@ function AnimatedNumber({ value }) {
 export default function AdminDashboard({ onTabChange }) {
   const { transactions, queries, getMonthTransactions, getStats, CATEGORIES } = useData();
   const { logout } = useAuth();
+  const { t } = useLang();
 
   const now = new Date();
   const [viewYear, setViewYear]   = useState(now.getFullYear());
@@ -77,7 +79,7 @@ export default function AdminDashboard({ onTabChange }) {
                 </button>
               )}
               <button onClick={logout} className="btn-icon" style={{ background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.25)', color:'#fff', fontSize:12, padding:'8px 14px', borderRadius:10, fontFamily:'var(--font)', fontWeight:600 }}>
-                Lock
+                {t('Lock')}
               </button>
             </div>
           </div>

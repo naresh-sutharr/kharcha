@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Delete } from 'lucide-react';
-import { useLang } from '../../context/LanguageContext';
+import { useLang } from '../context/LanguageContext';
 
 export default function LockScreen({ role, onSuccess, onBack }) {
   const { t } = useLang();

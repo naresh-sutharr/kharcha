@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Eye } from 'lucide-react';
-import { useLang } from '../../context/LanguageContext';
+import { useLang } from '../context/LanguageContext';
 
 export default function RoleSelect({ onSelectRole }) {
   const { t } = useLang();
