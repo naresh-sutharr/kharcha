@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
 import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { translateToHindi } from '../utils/translate';
+import { notifyExpense, notifyReceived } from '../utils/notify';
 
 const DataContext = createContext(null);
 
@@ -21,20 +22,29 @@ function generateId() {
 
 export function DataProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
-  const [queries, setQueries] = useState({}); // { txId: [{from, text, time}] }
+  const [queries, setQueries] = useState({});
+  // Start with loading=false so cached data shows INSTANTLY
+  // onSnapshot will update from network in background
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
-  // 1. Listen to Transactions in Real-Time
+  // 1. Listen to Transactions in Real-Time (offline cache loads instantly)
   useEffect(() => {
     const q = query(collection(db, 'transactions'), orderBy('createdAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const txs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setTransactions(txs);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching transactions:", error);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(q,
+      { includeMetadataChanges: false },
+      (snapshot) => {
+        const txs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        setTransactions(txs);
+        setLoading(false);
+        setInitialized(true);
+      },
+      (error) => {
+        console.error('Error fetching transactions:', error);
+        setLoading(false);
+        setInitialized(true);
+      }
+    );
     return () => unsubscribe();
   }, []);
 
@@ -43,12 +53,12 @@ export function DataProvider({ children }) {
     const q = collection(db, 'queries');
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const qs = {};
-      snapshot.docs.forEach(doc => {
-        qs[doc.id] = doc.data().thread || [];
+      snapshot.docs.forEach(d => {
+        qs[d.id] = d.data().thread || [];
       });
       setQueries(qs);
     }, (error) => {
-      console.error("Error fetching queries:", error);
+      console.error('Error fetching queries:', error);
     });
     return () => unsubscribe();
   }, []);
@@ -68,6 +78,14 @@ export function DataProvider({ children }) {
       receipt: data.receipt || null,
     };
     await setDoc(doc(db, 'transactions', id), tx);
+
+    // 🔔 Instant notification to Papa
+    if (data.type === 'debit') {
+      notifyExpense(data.amount, data.category, data.note);
+    } else if (data.type === 'credit') {
+      notifyReceived(data.amount, data.note);
+    }
+
     return { id, ...tx };
   }
 
@@ -84,7 +102,6 @@ export function DataProvider({ children }) {
 
   async function deleteTransaction(id) {
     await deleteDoc(doc(db, 'transactions', id));
-    // Also delete associated queries if they exist
     await deleteDoc(doc(db, 'queries', id));
   }
 
@@ -108,8 +125,6 @@ export function DataProvider({ children }) {
   }
 
   async function clearAllData() {
-    // Note: Deleting all documents from a client is not recommended for large collections, 
-    // but works for this personal app.
     transactions.forEach(async (t) => {
       await deleteDoc(doc(db, 'transactions', t.id));
     });
@@ -118,12 +133,13 @@ export function DataProvider({ children }) {
     });
   }
 
-  if (loading) {
+  // Show a very brief splash ONLY on the very first load (no cached data yet)
+  if (loading && !initialized) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--mesh)' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📒</div>
-          <div className="skeleton" style={{ width: 120, height: 16, margin: '0 auto' }} />
+          <div style={{ fontSize: 48, marginBottom: 12, animation: 'pulse 1.2s infinite' }}>📒</div>
+          <div className="skeleton" style={{ width: 120, height: 10, margin: '0 auto', borderRadius: 6 }} />
         </div>
       </div>
     );
