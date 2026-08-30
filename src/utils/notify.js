@@ -10,15 +10,18 @@ const NTFY_ADMIN_TOPIC = 'hisab-kitab-admin-naresh-2024';
 // No random titles needed anymore
 async function sendNtfy(topic, title, message, emoji) {
   try {
-    await fetch(`https://ntfy.sh/${topic}`, {
+    await fetch('https://ntfy.sh/', {
       method: 'POST',
       headers: {
-        'Title': title,
-        'Tags': emoji,
-        'Priority': 'high',
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json'
       },
-      body: message,
+      body: JSON.stringify({
+        topic: topic,
+        title: title,
+        message: message,
+        tags: [emoji],
+        priority: 4
+      })
     });
   } catch (e) {
     console.warn('Notification send failed:', e);
