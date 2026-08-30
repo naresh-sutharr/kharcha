@@ -110,19 +110,7 @@ export function DataProvider({ children }) {
     for (const id of Object.keys(queries)) await deleteDoc(doc(db, 'queries', id));
   }
 
-  // ─── Loading screen ────────────────────────────────────────
-  if (loading) {
-    return (
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100vh', background:'var(--mesh)' }}>
-        <div style={{ textAlign:'center' }}>
-          <div style={{ fontSize:52, marginBottom:16, animation:'pulse 1.2s infinite' }}>📒</div>
-          <p style={{ fontSize:14, fontWeight:600, color:'var(--t2)', marginBottom:10 }}>Hisab-Kitab</p>
-          <div className="skeleton" style={{ width:120, height:4, margin:'0 auto', borderRadius:4 }} />
-        </div>
-      </div>
-    );
-  }
-
+  // ─── Never block — render immediately, data streams in ──────
   return (
     <DataContext.Provider value={{
       transactions, queries,

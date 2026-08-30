@@ -22,17 +22,7 @@ export default function App() {
   const [pendingRole, setPendingRole] = useState(null); // role being unlocked
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  if (!initialized) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-gradient)' }}>
-        <div style={{ textAlign: 'center' }}>
-          <img src="/logo.jpeg" alt="Hisab-Kitab Logo" style={{ width: 90, height: 90, borderRadius: 24, marginBottom: 20, boxShadow: '0 12px 36px rgba(124,58,237,0.35)', objectFit: 'cover' }} />
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: 'var(--t1)', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px', marginBottom: 16 }}>Hisab-Kitab</h1>
-          <div className="skeleton" style={{ width: 140, height: 4, margin: '0 auto', borderRadius: 2 }} />
-        </div>
-      </div>
-    );
-  }
+
 
   // Not logged in — show role select or lock screen
   if (!role) {
