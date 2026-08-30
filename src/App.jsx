@@ -5,6 +5,8 @@ import RoleSelect from './components/RoleSelect';
 import LockScreen from './components/LockScreen';
 import BottomNav from './components/shared/BottomNav';
 
+import { notifyPapaAppOpen } from './utils/notify';
+
 // Admin screens
 import AdminDashboard from './components/admin/AdminDashboard';
 import TransactionFeed from './components/admin/TransactionFeed';
@@ -21,6 +23,13 @@ export default function App() {
   const { queries, transactions } = useData();
   const [pendingRole, setPendingRole] = useState(null); // role being unlocked
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Notify admin when papa opens the app
+  React.useEffect(() => {
+    if (role === 'viewer') {
+      notifyPapaAppOpen();
+    }
+  }, [role]);
 
 
 
