@@ -7,20 +7,20 @@
 const NTFY_TOPIC = 'hisab-kitab-papa-naresh-2024';
 const NTFY_ADMIN_TOPIC = 'hisab-kitab-admin-naresh-2024';
 
-// Creative Blinkit-style titles
+// Professional & pleasant titles
 const EXPENSE_TITLES = [
-  "💸 Oops, Paise ud gaye!",
-  "🛍️ Naresh ka naya Kharcha!",
-  "📉 Balance thoda neeche gaya...",
-  "💳 Wallet se paise gaye!",
-  "🚨 Alert: Kharcha ho gaya!"
+  "📝 Naya Kharcha Add Hua",
+  "💸 Expense Record Updated",
+  "📊 Naresh ne Entry Update ki",
+  "💳 New Transaction Added",
+  "📒 Kharcha Details Updated"
 ];
 
 const RECEIVED_TITLES = [
-  "🤑 Cha-ching! Paisa aa gaya!",
-  "💰 Wallet heavy ho gaya!",
-  "✅ Papa se fund received!",
-  "🚀 Balance goes UP UP!"
+  "✅ Amount Received Successfully",
+  "💰 Fund Received",
+  "📈 Balance Updated",
+  "₹ Amount Added to Wallet"
 ];
 
 async function sendNtfy(topic, title, message, emoji) {
