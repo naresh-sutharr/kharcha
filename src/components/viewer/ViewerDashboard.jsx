@@ -9,7 +9,6 @@ import {
   ChevronLeft, ChevronRight, RefreshCcw, LogOut,
   ArrowDownLeft, ArrowUpRight, Bell, List, BarChart2
 } from 'lucide-react';
-import { NTFY_TOPIC } from '../../utils/notify';
 
 // Animated count-up number
 function CountUp({ value, prefix = '₹' }) {
@@ -130,21 +129,6 @@ export default function ViewerDashboard({ onTabChange }) {
           </div>
         </div>
 
-        {/* ══ NOTIFICATION BANNER ══ */}
-        {showNotif && (
-          <div style={{ margin: '14px 16px 0', padding: '14px 16px', borderRadius: 14, background: '#fffbeb', border: '1.5px solid #fde68a' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: '#92400e' }}>📲 Set up Notifications</span>
-              <button onClick={() => setShowNotif(false)} style={{ background: 'none', border: 'none', color: '#d97706', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>✕</button>
-            </div>
-            <p style={{ fontSize: 12, color: '#78350f', lineHeight: 1.6, marginBottom: 8 }}>
-              Download <b>ntfy</b> app from Play Store / App Store. Add this topic to get instant notifications when Naresh adds an entry:
-            </p>
-            <div style={{ background: '#fff', border: '1.5px dashed #fde68a', borderRadius: 8, padding: '8px 12px', fontFamily: 'monospace', fontSize: 14, fontWeight: 800, color: '#1c1917', letterSpacing: '0.02em', userSelect: 'all' }}>
-              {NTFY_TOPIC}
-            </div>
-          </div>
-        )}
 
         <div style={{ padding: '12px 16px 0' }}>
           {/* Stat cards */}
