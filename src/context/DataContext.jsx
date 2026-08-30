@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
-import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import { translateToHindi } from '../utils/translate';
+import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { notifyExpense, notifyReceived } from '../utils/notify';
 
 const DataContext = createContext(null);
@@ -52,7 +51,6 @@ export function DataProvider({ children }) {
   // ─── CRUD ──────────────────────────────────────────────────
   async function addTransaction(data) {
     const id = generateId();
-    const note_hi = data.note ? await translateToHindi(data.note) : '';
     const tx = {
       createdAt: new Date().toISOString(),
       date:      data.date     || new Date().toISOString().split('T')[0],
@@ -61,12 +59,11 @@ export function DataProvider({ children }) {
       amount:    Number(data.amount),
       category:  data.category || 'misc',
       note:      data.note     || '',
-      note_hi,
       receipt:   data.receipt  || null,
     };
     await setDoc(doc(db, 'transactions', id), tx);
 
-    // Instant push notification to Papa (via ntfy.sh)
+    // Send push notification to Papa via ntfy.sh
     if (data.type === 'debit')  notifyExpense(data.amount, data.category, data.note);
     if (data.type === 'credit') notifyReceived(data.amount, data.note);
 
