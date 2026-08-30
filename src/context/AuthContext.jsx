@@ -12,7 +12,7 @@ const LOCK_TIMEOUT = 10 * 60 * 1000; // 10 minutes
 
 const PINS = {
   admin:  { key: 'hk_admin_hash',  default: '3120' },
-  viewer: { key: 'hk_viewer_hash', default: '9660' },
+  viewer: { key: 'hk_viewer_hash_2', default: '1050' },
 };
 
 // Get PIN hash from localStorage — if not set, hash the default and store it

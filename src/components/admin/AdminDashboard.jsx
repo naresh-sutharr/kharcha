@@ -30,7 +30,7 @@ export default function AdminDashboard({ onTabChange }) {
   const { transactions, queries, getMonthTransactions, getStats, CATEGORIES } = useData();
   const { logout } = useAuth();
   const { t } = useLang();
-
+  
   const now = new Date();
   const [viewYear, setViewYear]   = useState(now.getFullYear());
   const [viewMonth, setViewMonth] = useState(now.getMonth());
@@ -49,7 +49,7 @@ export default function AdminDashboard({ onTabChange }) {
   const filtered = monthTxs.filter(t => filterCat === 'all' || t.category === filterCat);
   const recent   = filtered.slice(0, 5);
 
-  const monthLabel = new Date(viewYear, viewMonth).toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+  const monthLabel = new Date(viewYear, viewMonth).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' });
   const pendingQ   = Object.values(queries).flat().filter(q => q.from === 'viewer').length;
 
   const pctSpent  = stats.received > 0 ? Math.min((stats.spent / stats.received) * 100, 100) : 0;
@@ -58,7 +58,7 @@ export default function AdminDashboard({ onTabChange }) {
   function prevMonth() { if (viewMonth===0){setViewMonth(11);setViewYear(y=>y-1);}else setViewMonth(m=>m-1); }
   function nextMonth() { if (viewMonth===11){setViewMonth(0);setViewYear(y=>y+1);}else setViewMonth(m=>m+1); }
 
-  const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
+  const greeting = now.getHours() < 12 ? t('Good Morning') : now.getHours() < 17 ? t('Good Afternoon') : t('Good Evening');
 
   return (
     <>
@@ -116,18 +116,18 @@ export default function AdminDashboard({ onTabChange }) {
           <div style={{ display:'flex', gap:10 }}>
             <button className="qa-btn" onClick={()=>{ setDrawerType('credit'); setShowDrawer(true); }}>
               <div className="qa-icon" style={{ background:'rgba(5,150,105,0.1)' }}>💰</div>
-              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>Received</span>
-              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>from Papa</span>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Received")}</span>
+              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>{t("from Papa")}</span>
             </button>
             <button className="qa-btn" onClick={()=>{ setDrawerType('debit'); setShowDrawer(true); }}>
               <div className="qa-icon" style={{ background:'rgba(225,29,72,0.08)' }}>💸</div>
-              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>Expense</span>
-              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>add spending</span>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Expense")}</span>
+              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>{t("add spending")}</span>
             </button>
             <button className="qa-btn" onClick={()=>onTabChange('transactions')}>
               <div className="qa-icon" style={{ background:'rgba(124,58,237,0.08)' }}>📋</div>
-              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>Records</span>
-              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>all entries</span>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Records")}</span>
+              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>{t("all entries")}</span>
             </button>
           </div>
         </div>
@@ -143,8 +143,8 @@ export default function AdminDashboard({ onTabChange }) {
             }}>
               <span style={{ fontSize:22 }}>🔔</span>
               <div>
-                <div style={{ fontWeight:700, fontSize:13.5, color:'var(--rose)' }}>{pendingQ} question{pendingQ>1?'s':''} from Papa</div>
-                <div style={{ fontSize:11, color:'var(--t3)', marginTop:1 }}>Tap to view & reply →</div>
+                <div style={{ fontWeight:700, fontSize:13.5, color:'var(--rose)' }}>{pendingQ} {t(pendingQ>1?'questions from Papa':'question from Papa')}</div>
+                <div style={{ fontSize:11, color:'var(--t3)', marginTop:1 }}>{t("Tap to view & reply →")}</div>
               </div>
             </button>
           )}
@@ -152,14 +152,14 @@ export default function AdminDashboard({ onTabChange }) {
           {/* ═══ HEALTH BAR ═══ */}
           <div className="card" style={{ padding:'15px 18px', marginBottom:16 }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
-              <span style={{ fontSize:13, fontWeight:700, color:'var(--t1)' }}>Spending Health</span>
+              <span style={{ fontSize:13, fontWeight:700, color:'var(--t1)' }}>{t("Spending Health")}</span>
               <span style={{ fontSize:11, fontWeight:700,
                 color: pctSpent>85?'var(--rose)': pctSpent>60?'var(--amber)':'var(--emerald)',
                 background: pctSpent>85?'var(--rose-bg)': pctSpent>60?'var(--amber-bg)':'var(--emerald-bg)',
                 padding:'3px 10px', borderRadius:999,
                 border: `1px solid ${pctSpent>85?'var(--rose-bdr)':pctSpent>60?'var(--amber-bdr)':'var(--emerald-bdr)'}`,
               }}>
-                {pctSpent>85?'⚠ Critical':pctSpent>60?'↑ High':'✓ On Track'}
+                {pctSpent>85?t('⚠ Over Budget'):pctSpent>60?t('↑ High'):t('✓ On Track')}
               </span>
             </div>
             <div className="health-bar-track">
@@ -169,8 +169,8 @@ export default function AdminDashboard({ onTabChange }) {
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', marginTop:7 }}>
               <span style={{ fontSize:10.5, color:'var(--t3)' }}>₹0</span>
-              <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600 }}>{pctSpent.toFixed(0)}% of ₹{stats.received.toLocaleString('en-IN')} used</span>
-              <span style={{ fontSize:10.5, color:'var(--t3)' }}>Budget</span>
+              <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600 }}>{pctSpent.toFixed(0)}% {t('used')} (₹{stats.received.toLocaleString('en-IN')})</span>
+              <span style={{ fontSize:10.5, color:'var(--t3)' }}>{t("Budget")}</span>
             </div>
           </div>
 
@@ -185,23 +185,23 @@ export default function AdminDashboard({ onTabChange }) {
           <div className="chip-row" style={{ marginBottom:14 }}>
             {CATS.map(c=>(
               <button key={c.id} className={`chip ${filterCat===c.id?'active':''}`} onClick={()=>setFilterCat(c.id)}>
-                {c.emoji} {c.label}
+                {c.emoji} {t(c.label)}
               </button>
             ))}
           </div>
 
           {/* ═══ TRANSACTION LIST ═══ */}
           <div className="section-header">
-            <span className="section-title">Transactions</span>
-            <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600, background:'var(--violet-light)', padding:'3px 10px', borderRadius:999, color:'var(--violet)' }}>{filtered.length} entries</span>
+            <span className="section-title">{t("Transactions")}</span>
+            <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600, background:'var(--violet-light)', padding:'3px 10px', borderRadius:999, color:'var(--violet)' }}>{filtered.length} {t("entries")}</span>
           </div>
 
           <div className="card" style={{ overflow:'hidden' }}>
             {filtered.length === 0 ? (
               <div style={{ padding:'48px 20px', textAlign:'center' }}>
                 <div style={{ fontSize:42, marginBottom:10 }}>📭</div>
-                <p style={{ fontWeight:700, fontSize:15, color:'var(--t1)' }}>No entries yet</p>
-                <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>Use the quick actions above to add one</p>
+                <p style={{ fontWeight:700, fontSize:15, color:'var(--t1)' }}>{t("No entries yet")}</p>
+                <p style={{ fontSize:13, color:'var(--t3)', marginTop:4 }}>{t("Use the quick actions above to add one")}</p>
               </div>
             ) : filtered.map((tx,i)=>(
               <React.Fragment key={tx.id}>

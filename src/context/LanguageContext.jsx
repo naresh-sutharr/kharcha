@@ -45,6 +45,11 @@ const DICTIONARY = {
   "Received from Papa": "पापा से प्राप्त",
   "Credit": "प्राप्त",
   "Expense": "खर्च",
+  "All Records": "सभी रिकॉर्ड",
+  "Edit": "संपादित करें",
+  "Delete": "हटाएं",
+  "Confirm?": "पुष्टि करें?",
+  "No transactions found": "कोई लेनदेन नहीं मिला",
   
   // Health Bar
   "Spending Health": "खर्च की स्थिति",

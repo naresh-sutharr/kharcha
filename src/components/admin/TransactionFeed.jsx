@@ -5,8 +5,11 @@ import ReceiptModal from '../shared/ReceiptModal';
 import AddEntryDrawer from './AddEntryDrawer';
 import { Plus, Trash2, Edit2 } from 'lucide-react';
 
+import { useLang } from '../../context/LanguageContext';
+
 export default function TransactionFeed({ isViewer = false }) {
   const { transactions, queries, deleteTransaction, CATEGORIES } = useData();
+  const { t } = useLang();
   const [filterCat, setFilterCat] = useState('all');
   const [filterType, setFilterType] = useState('all');
   const [selectedTx, setSelectedTx] = useState(null);
@@ -31,14 +34,14 @@ export default function TransactionFeed({ isViewer = false }) {
     <>
       <div className="page" style={isViewer ? { paddingTop: 20 } : {}}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800 }}>All Records</h1>
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{filtered.length} entries</span>
+          <h1 style={{ fontSize: 22, fontWeight: 800 }}>{t("All Records")}</h1>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{filtered.length} {t("entries")}</span>
         </div>
 
         {/* Type Filter */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-          {[['all','All'],['credit','Received'],['debit','Expenses']].map(([v,l]) => (
-            <button key={v} className={`chip ${filterType === v ? 'active' : ''}`} onClick={() => setFilterType(v)}>{l}</button>
+          {[['all','All'],['credit','Received'],['debit','Expense']].map(([v,l]) => (
+            <button key={v} className={`chip ${filterType === v ? 'active' : ''}`} onClick={() => setFilterType(v)}>{t(l)}</button>
           ))}
         </div>
 
@@ -46,7 +49,7 @@ export default function TransactionFeed({ isViewer = false }) {
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16 }}>
           {CATS.map(c => (
             <button key={c.id} className={`chip ${filterCat === c.id ? 'active' : ''}`} onClick={() => setFilterCat(c.id)} style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
-              {c.emoji} {c.label}
+              {c.emoji} {t(c.label)}
             </button>
           ))}
         </div>
@@ -55,7 +58,7 @@ export default function TransactionFeed({ isViewer = false }) {
           {filtered.length === 0 ? (
             <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: 40, marginBottom: 8 }}>📭</div>
-              <p style={{ fontWeight: 600 }}>No transactions found</p>
+              <p style={{ fontWeight: 600 }}>{t("No transactions found")}</p>
             </div>
           ) : (
             filtered.map((tx, i) => (
@@ -66,7 +69,7 @@ export default function TransactionFeed({ isViewer = false }) {
                   {!isViewer && (
                     <div style={{ display: 'flex', gap: 6, padding: '0 16px 12px', justifyContent: 'flex-end' }}>
                       <button className="btn btn-ghost btn-sm" onClick={() => { setEditTx(tx); setShowDrawer(true); }} style={{ gap: 4, padding: '6px 12px', fontSize: 12 }}>
-                        <Edit2 size={12} /> Edit
+                        <Edit2 size={12} /> {t("Edit")}
                       </button>
                       <button className="btn btn-sm" onClick={() => handleDelete(tx)} style={{
                         gap: 4, padding: '6px 12px', fontSize: 12,
@@ -74,7 +77,7 @@ export default function TransactionFeed({ isViewer = false }) {
                         color: confirmDelete === tx.id ? '#fff' : 'var(--red)',
                         border: '1px solid rgba(239,68,68,0.2)',
                       }}>
-                        <Trash2 size={12} /> {confirmDelete === tx.id ? 'Confirm?' : 'Delete'}
+                        <Trash2 size={12} /> {confirmDelete === tx.id ? t('Confirm?') : t('Delete')}
                       </button>
                     </div>
                   )}
