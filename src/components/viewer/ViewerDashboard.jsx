@@ -31,18 +31,12 @@ function CountUp({ value, prefix = '₹' }) {
   return <span>{prefix}{display.toLocaleString('en-IN')}</span>;
 }
 
-const TABS = [
-  { id: 'home',    label: 'Home',    Icon: BarChart2 },
-  { id: 'records', label: 'Records', Icon: List      },
-];
-
 export default function ViewerDashboard({ onTabChange }) {
   const { getMonthTransactions, getStats, queries, transactions } = useData();
   const { logout } = useAuth();
   const { lang, toggleLanguage } = useLang();
 
   const now = new Date();
-  const [innerTab,  setInnerTab]  = useState('home');
   const [viewYear,  setViewYear]  = useState(now.getFullYear());
   const [viewMonth, setViewMonth] = useState(now.getMonth());
   const [selectedTx, setSelectedTx] = useState(null);
@@ -66,9 +60,6 @@ export default function ViewerDashboard({ onTabChange }) {
     if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
     else setViewMonth(m => m + 1);
   }
-
-  // ── Records tab: all transactions (all time), newest first
-  const allTxs = [...transactions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <>
@@ -155,147 +146,95 @@ export default function ViewerDashboard({ onTabChange }) {
           </div>
         )}
 
-        {/* ══ INNER TAB BAR ══ */}
-        <div style={{ display: 'flex', gap: 8, padding: '16px 16px 4px' }}>
-          {TABS.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              onClick={() => setInnerTab(id)}
-              style={{
-                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                padding: '10px 0', borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                border: innerTab === id ? 'none' : '1.5px solid var(--border)',
-                background: innerTab === id ? 'var(--violet-grad)' : '#fff',
-                color: innerTab === id ? '#fff' : 'var(--t2)',
-                boxShadow: innerTab === id ? '0 4px 14px var(--violet-glow)' : 'var(--shadow-sm)',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Icon size={15} /> {label}
-            </button>
-          ))}
-        </div>
-
         <div style={{ padding: '12px 16px 0' }}>
-
-          {/* ══ HOME TAB ══ */}
-          {innerTab === 'home' && (
-            <>
-              {/* Stat cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
-                <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(5,150,105,0.1)', border: '1.5px solid rgba(5,150,105,0.15)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Received</span>
-                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <ArrowDownLeft size={14} color="#059669" />
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: '#059669', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
-                    ₹{stats.received.toLocaleString('en-IN')}
-                  </div>
-                  <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
-                </div>
-                <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(225,29,72,0.08)', border: '1.5px solid rgba(225,29,72,0.12)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Spent</span>
-                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(225,29,72,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <ArrowUpRight size={14} color="#e11d48" />
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: '#e11d48', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
-                    ₹{stats.spent.toLocaleString('en-IN')}
-                  </div>
-                  <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
+          {/* Stat cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+            <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(5,150,105,0.1)', border: '1.5px solid rgba(5,150,105,0.15)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Received</span>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ArrowDownLeft size={14} color="#059669" />
                 </div>
               </div>
-
-              {/* Spending bar */}
-              <div style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', marginBottom: 14, boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>Spending Health</span>
-                  <span style={{
-                    fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
-                    color: pctSpent > 85 ? '#dc2626' : pctSpent > 60 ? '#d97706' : '#059669',
-                    background: pctSpent > 85 ? '#fee2e2' : pctSpent > 60 ? '#fef3c7' : '#d1fae5',
-                  }}>
-                    {pctSpent > 85 ? '⚠ Over Budget' : pctSpent > 60 ? '↑ High' : '✓ On Track'}
-                  </span>
-                </div>
-                <div style={{ width: '100%', height: 7, background: '#f3f4f6', borderRadius: 999, overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%', borderRadius: 999, width: `${pctSpent}%`,
-                    background: pctSpent > 85
-                      ? 'linear-gradient(90deg,#f59e0b,#dc2626)'
-                      : 'linear-gradient(90deg,#34d399,#059669)',
-                    transition: 'width 0.8s ease',
-                  }} />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                  <span style={{ fontSize: 10, color: 'var(--t3)' }}>₹0</span>
-                  <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% of ₹{stats.received.toLocaleString('en-IN')} used</span>
-                  <span style={{ fontSize: 10, color: 'var(--t3)' }}>Budget</span>
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#059669', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
+                ₹{stats.received.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
+            </div>
+            <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(225,29,72,0.08)', border: '1.5px solid rgba(225,29,72,0.12)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Spent</span>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(225,29,72,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ArrowUpRight size={14} color="#e11d48" />
                 </div>
               </div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: '#e11d48', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
+                ₹{stats.spent.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
+            </div>
+          </div>
 
-              {/* Month picker */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, padding: '10px 14px', borderRadius: 14, background: '#fff', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
-                <button onClick={prevMonth} style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--violet-light)', border: 'none', color: 'var(--violet)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ChevronLeft size={17} />
-                </button>
-                <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--t1)', fontFamily: 'var(--font-num)' }}>{monthLabel}</span>
-                <button onClick={nextMonth} style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--violet-light)', border: 'none', color: 'var(--violet)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ChevronRight size={17} />
-                </button>
-              </div>
+          {/* Spending bar */}
+          <div style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', marginBottom: 14, boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>Spending Health</span>
+              <span style={{
+                fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
+                color: pctSpent > 85 ? '#dc2626' : pctSpent > 60 ? '#d97706' : '#059669',
+                background: pctSpent > 85 ? '#fee2e2' : pctSpent > 60 ? '#fef3c7' : '#d1fae5',
+              }}>
+                {pctSpent > 85 ? '⚠ Over Budget' : pctSpent > 60 ? '↑ High' : '✓ On Track'}
+              </span>
+            </div>
+            <div style={{ width: '100%', height: 7, background: '#f3f4f6', borderRadius: 999, overflow: 'hidden' }}>
+              <div style={{
+                height: '100%', borderRadius: 999, width: `${pctSpent}%`,
+                background: pctSpent > 85
+                  ? 'linear-gradient(90deg,#f59e0b,#dc2626)'
+                  : 'linear-gradient(90deg,#34d399,#059669)',
+                transition: 'width 0.8s ease',
+              }} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+              <span style={{ fontSize: 10, color: 'var(--t3)' }}>₹0</span>
+              <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% of ₹{stats.received.toLocaleString('en-IN')} used</span>
+              <span style={{ fontSize: 10, color: 'var(--t3)' }}>Budget</span>
+            </div>
+          </div>
 
-              {/* Transactions for that month */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t1)' }}>Transactions</span>
-                <span style={{ fontSize: 12, color: 'var(--violet)', background: 'var(--violet-light)', padding: '3px 11px', borderRadius: 999, fontWeight: 700 }}>
-                  {monthTxs.length} entries
-                </span>
-              </div>
-              <div className="card" style={{ overflow: 'hidden', marginBottom: 20 }}>
-                {monthTxs.length === 0 ? (
-                  <div style={{ padding: '44px 20px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 42, marginBottom: 10 }}>📭</div>
-                    <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--t1)' }}>No entries yet</p>
-                    <p style={{ fontSize: 13, color: 'var(--t3)', marginTop: 4 }}>No transactions this month</p>
-                  </div>
-                ) : monthTxs.map((tx, i) => (
-                  <React.Fragment key={tx.id}>
-                    <TransactionCard tx={tx} queries={queries[tx.id] || []} onTap={setSelectedTx} onFlag={setFlagTx} isViewer={true} />
-                    {i < monthTxs.length - 1 && <div style={{ height: 1, background: 'var(--border)', margin: '0 16px' }} />}
-                  </React.Fragment>
-                ))}
-              </div>
-            </>
-          )}
+          {/* Month picker */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, padding: '10px 14px', borderRadius: 14, background: '#fff', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
+            <button onClick={prevMonth} style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--violet-light)', border: 'none', color: 'var(--violet)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ChevronLeft size={17} />
+            </button>
+            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--t1)', fontFamily: 'var(--font-num)' }}>{monthLabel}</span>
+            <button onClick={nextMonth} style={{ width: 32, height: 32, borderRadius: 10, background: 'var(--violet-light)', border: 'none', color: 'var(--violet)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ChevronRight size={17} />
+            </button>
+          </div>
 
-          {/* ══ RECORDS TAB — All time ══ */}
-          {innerTab === 'records' && (
-            <>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t1)' }}>All Transactions</span>
-                <span style={{ fontSize: 12, color: 'var(--violet)', background: 'var(--violet-light)', padding: '3px 11px', borderRadius: 999, fontWeight: 700 }}>
-                  {allTxs.length} total
-                </span>
+          {/* Transactions for that month */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t1)' }}>Transactions</span>
+            <span style={{ fontSize: 12, color: 'var(--violet)', background: 'var(--violet-light)', padding: '3px 11px', borderRadius: 999, fontWeight: 700 }}>
+              {monthTxs.length} entries
+            </span>
+          </div>
+          <div className="card" style={{ overflow: 'hidden', marginBottom: 20 }}>
+            {monthTxs.length === 0 ? (
+              <div style={{ padding: '44px 20px', textAlign: 'center' }}>
+                <div style={{ fontSize: 42, marginBottom: 10 }}>📭</div>
+                <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--t1)' }}>No entries yet</p>
+                <p style={{ fontSize: 13, color: 'var(--t3)', marginTop: 4 }}>No transactions this month</p>
               </div>
-              <div className="card" style={{ overflow: 'hidden', marginBottom: 20 }}>
-                {allTxs.length === 0 ? (
-                  <div style={{ padding: '44px 20px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 42, marginBottom: 10 }}>📋</div>
-                    <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--t1)' }}>No records yet</p>
-                  </div>
-                ) : allTxs.map((tx, i) => (
-                  <React.Fragment key={tx.id}>
-                    <TransactionCard tx={tx} queries={queries[tx.id] || []} onTap={setSelectedTx} onFlag={setFlagTx} isViewer={true} />
-                    {i < allTxs.length - 1 && <div style={{ height: 1, background: 'var(--border)', margin: '0 16px' }} />}
-                  </React.Fragment>
-                ))}
-              </div>
-            </>
-          )}
+            ) : monthTxs.map((tx, i) => (
+              <React.Fragment key={tx.id}>
+                <TransactionCard tx={tx} queries={queries[tx.id] || []} onTap={setSelectedTx} onFlag={setFlagTx} isViewer={true} />
+                {i < monthTxs.length - 1 && <div style={{ height: 1, background: 'var(--border)', margin: '0 16px' }} />}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
 

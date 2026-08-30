@@ -54,7 +54,7 @@ export default function App() {
     }
     if (role === 'viewer') {
       if (activeTab === 'dashboard') return <ViewerDashboard onTabChange={setActiveTab} />;
-      if (activeTab === 'charts') return <SpendingCharts />;
+      if (activeTab === 'transactions') return <TransactionFeed isViewer={true} />;
       if (activeTab === 'queries') return <AllViewerQueries />;
     }
     return null;

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../utils/firebase';
-import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { translateToHindi } from '../utils/translate';
 import { notifyExpense, notifyReceived } from '../utils/notify';
 
 const DataContext = createContext(null);
@@ -51,6 +51,15 @@ export function DataProvider({ children }) {
   // ─── CRUD ──────────────────────────────────────────────────
   async function addTransaction(data) {
     const id = generateId();
+    
+    // Background translation to not block the UI completely
+    let note_hi = '';
+    if (data.note) {
+      try {
+        note_hi = await translateToHindi(data.note);
+      } catch(e) {}
+    }
+
     const tx = {
       createdAt: new Date().toISOString(),
       date:      data.date     || new Date().toISOString().split('T')[0],
@@ -59,8 +68,10 @@ export function DataProvider({ children }) {
       amount:    Number(data.amount),
       category:  data.category || 'misc',
       note:      data.note     || '',
+      note_hi,
       receipt:   data.receipt  || null,
     };
+    
     await setDoc(doc(db, 'transactions', id), tx);
 
     // Send push notification to Papa via ntfy.sh
@@ -72,9 +83,19 @@ export function DataProvider({ children }) {
 
   async function editTransaction(id, data) {
     const payload = { ...data, amount: Number(data.amount) };
+    
     if (data.note !== undefined) {
-      payload.note_hi = data.note ? await translateToHindi(data.note) : '';
+      if (data.note) {
+        try {
+          payload.note_hi = await translateToHindi(data.note);
+        } catch(e) {
+          payload.note_hi = '';
+        }
+      } else {
+        payload.note_hi = '';
+      }
     }
+    
     await setDoc(doc(db, 'transactions', id), payload, { merge: true });
   }
 

@@ -5,7 +5,7 @@ import ReceiptModal from '../shared/ReceiptModal';
 import AddEntryDrawer from './AddEntryDrawer';
 import { Plus, Trash2, Edit2 } from 'lucide-react';
 
-export default function TransactionFeed() {
+export default function TransactionFeed({ isViewer = false }) {
   const { transactions, queries, deleteTransaction, CATEGORIES } = useData();
   const [filterCat, setFilterCat] = useState('all');
   const [filterType, setFilterType] = useState('all');
@@ -29,7 +29,7 @@ export default function TransactionFeed() {
 
   return (
     <>
-      <div className="page">
+      <div className="page" style={isViewer ? { paddingTop: 20 } : {}}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <h1 style={{ fontSize: 22, fontWeight: 800 }}>All Records</h1>
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{filtered.length} entries</span>
@@ -51,7 +51,7 @@ export default function TransactionFeed() {
           ))}
         </div>
 
-        <div className="glass" style={{ overflow: 'hidden' }}>
+        <div className="glass" style={{ overflow: 'hidden', marginBottom: 20 }}>
           {filtered.length === 0 ? (
             <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: 40, marginBottom: 8 }}>📭</div>
@@ -61,21 +61,23 @@ export default function TransactionFeed() {
             filtered.map((tx, i) => (
               <React.Fragment key={tx.id}>
                 <div style={{ position: 'relative' }}>
-                  <TransactionCard tx={tx} queries={queries[tx.id] || []} onTap={setSelectedTx} isViewer={false} />
+                  <TransactionCard tx={tx} queries={queries[tx.id] || []} onTap={setSelectedTx} isViewer={isViewer} />
                   {/* Edit/Delete Actions */}
-                  <div style={{ display: 'flex', gap: 6, padding: '0 16px 12px', justifyContent: 'flex-end' }}>
-                    <button className="btn btn-ghost btn-sm" onClick={() => { setEditTx(tx); setShowDrawer(true); }} style={{ gap: 4, padding: '6px 12px', fontSize: 12 }}>
-                      <Edit2 size={12} /> Edit
-                    </button>
-                    <button className="btn btn-sm" onClick={() => handleDelete(tx)} style={{
-                      gap: 4, padding: '6px 12px', fontSize: 12,
-                      background: confirmDelete === tx.id ? 'var(--red)' : 'var(--red-bg)',
-                      color: confirmDelete === tx.id ? '#fff' : 'var(--red)',
-                      border: '1px solid rgba(239,68,68,0.2)',
-                    }}>
-                      <Trash2 size={12} /> {confirmDelete === tx.id ? 'Confirm?' : 'Delete'}
-                    </button>
-                  </div>
+                  {!isViewer && (
+                    <div style={{ display: 'flex', gap: 6, padding: '0 16px 12px', justifyContent: 'flex-end' }}>
+                      <button className="btn btn-ghost btn-sm" onClick={() => { setEditTx(tx); setShowDrawer(true); }} style={{ gap: 4, padding: '6px 12px', fontSize: 12 }}>
+                        <Edit2 size={12} /> Edit
+                      </button>
+                      <button className="btn btn-sm" onClick={() => handleDelete(tx)} style={{
+                        gap: 4, padding: '6px 12px', fontSize: 12,
+                        background: confirmDelete === tx.id ? 'var(--red)' : 'var(--red-bg)',
+                        color: confirmDelete === tx.id ? '#fff' : 'var(--red)',
+                        border: '1px solid rgba(239,68,68,0.2)',
+                      }}>
+                        <Trash2 size={12} /> {confirmDelete === tx.id ? 'Confirm?' : 'Delete'}
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {i < filtered.length - 1 && <div style={{ height: 1, background: 'var(--border)' }} />}
               </React.Fragment>
@@ -84,7 +86,9 @@ export default function TransactionFeed() {
         </div>
       </div>
 
-      <button className="fab" onClick={() => { setEditTx(null); setShowDrawer(true); }}><Plus size={26} /></button>
+      {!isViewer && (
+        <button className="fab" onClick={() => { setEditTx(null); setShowDrawer(true); }}><Plus size={26} /></button>
+      )}
 
       {selectedTx && <ReceiptModal tx={selectedTx} onClose={() => setSelectedTx(null)} />}
       {showDrawer && <AddEntryDrawer onClose={() => { setShowDrawer(false); setEditTx(null); }} editTx={editTx} />}

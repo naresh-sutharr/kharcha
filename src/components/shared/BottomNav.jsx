@@ -9,7 +9,7 @@ const adminTabs = [
 ];
 const viewerTabs = [
   { id:'dashboard', label:'Home',   Icon:LayoutDashboard },
-  { id:'charts',    label:'Charts', Icon:ListOrdered },
+  { id:'transactions', label:'Records', Icon:ListOrdered },
   { id:'queries',   label:'Ask',    Icon:MessageCircle },
 ];
 
