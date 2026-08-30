@@ -33,7 +33,7 @@ function CountUp({ value, prefix = '₹' }) {
 export default function ViewerDashboard({ onTabChange }) {
   const { getMonthTransactions, getStats, queries, transactions } = useData();
   const { logout } = useAuth();
-  const { lang, toggleLanguage } = useLang();
+  const { lang, toggleLanguage, t } = useLang();
 
   const now = new Date();
   const [viewYear,  setViewYear]  = useState(now.getFullYear());
