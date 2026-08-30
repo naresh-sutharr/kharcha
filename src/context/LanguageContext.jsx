@@ -25,15 +25,22 @@ const DICTIONARY = {
   "Queries": "प्रश्न",
 
   // Dashboard
+  "Papa's Dashboard": "पापा का डैशबोर्ड",
+  "Good Morning": "सुप्रभात",
+  "Good Afternoon": "शुभ दोपहर",
+  "Good Evening": "शुभ संध्या",
+  "Balance — ": "शेष राशि — ",
   "Remaining Balance": "बची हुई राशि",
   "Received": "प्राप्त",
   "Spent": "खर्च",
+  "This month": "इस महीने",
   "from Papa": "पापा से",
   "add spending": "खर्च जोड़ें",
   "all entries": "सभी रिकॉर्ड",
   "Transactions": "लेनदेन",
   "entries": "रिकॉर्ड",
   "No entries yet": "कोई लेनदेन नहीं",
+  "No transactions this month": "इस महीने कोई लेनदेन नहीं",
   "Use the quick actions above to add one": "जोड़ने के लिए ऊपर दिए गए विकल्पों का उपयोग करें",
   "Received from Papa": "पापा से प्राप्त",
   "Credit": "प्राप्त",
@@ -41,9 +48,10 @@ const DICTIONARY = {
   
   // Health Bar
   "Spending Health": "खर्च की स्थिति",
-  "Critical": "बहुत ज्यादा",
-  "High": "अधिक",
-  "On Track": "सही",
+  "⚠ Over Budget": "⚠ बजट से बाहर",
+  "↑ High": "↑ अधिक",
+  "✓ On Track": "✓ सही",
+  "used out of": "इस्तेमाल किया (कुल:",
   "used": "इस्तेमाल किया",
   "Budget": "बजट",
   "of": "में से",
@@ -59,6 +67,7 @@ const DICTIONARY = {
   "All": "सभी",
 
   // Misc
+  "Lock": "लॉक",
   "question from Papa": "पापा का प्रश्न",
   "questions from Papa": "पापा के प्रश्न",
   "Tap to view & reply →": "देखने और उत्तर देने के लिए टैप करें →"

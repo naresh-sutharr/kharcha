@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutDashboard, ListOrdered, MessageCircle, Settings } from 'lucide-react';
+import { useLang } from '../../context/LanguageContext';
 
 const adminTabs = [
   { id:'dashboard',    label:'Home',     Icon:LayoutDashboard },
@@ -14,6 +15,7 @@ const viewerTabs = [
 ];
 
 export default function BottomNav({ role, active, onChange, queryCount }) {
+  const { t } = useLang();
   const tabs = role === 'admin' ? adminTabs : viewerTabs;
   return (
     <nav className="bottom-nav">
@@ -26,7 +28,7 @@ export default function BottomNav({ role, active, onChange, queryCount }) {
               <Icon size={21} strokeWidth={on ? 2.5 : 1.8} />
               {badge && <span style={{ position:'absolute', top:-4, right:-4, width:8, height:8, borderRadius:'50%', background:'var(--rose)', border:'2px solid #fff' }}/>}
             </div>
-            {label}
+            {t(label)}
           </button>
         );
       })}

@@ -50,7 +50,7 @@ export default function TransactionCard({ tx, queries = [], onTap, onFlag, isVie
             onClick={e => { e.stopPropagation(); onFlag && onFlag(tx); }}
             style={{ fontSize:11, color:'var(--violet)', background:'var(--violet-light)', border:'1px solid rgba(124,58,237,0.15)', borderRadius:8, padding:'3px 8px', cursor:'pointer', display:'flex', alignItems:'center', gap:4, fontFamily:'var(--font)', fontWeight:600 }}
           >
-            <MessageCircle size={11}/> {hasQuery ? queries.length : 'Ask'}
+            <MessageCircle size={11}/> {hasQuery ? queries.length : t('Ask')}
           </button>
         ) : hasQuery && (
           <div style={{ display:'flex', alignItems:'center', gap:4 }}>

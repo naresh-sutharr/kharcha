@@ -48,8 +48,8 @@ export default function ViewerDashboard({ onTabChange }) {
     ? Math.min((stats.spent / stats.received) * 100, 100)
     : 0;
 
-  const monthLabel = new Date(viewYear, viewMonth).toLocaleString('en-IN', { month: 'long', year: 'numeric' });
-  const greeting   = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 17 ? 'Good Afternoon' : 'Good Evening';
+  const monthLabel = new Date(viewYear, viewMonth).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' });
+  const greeting   = now.getHours() < 12 ? t('Good Morning') : now.getHours() < 17 ? t('Good Afternoon') : t('Good Evening');
 
   function prevMonth() {
     if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
@@ -86,7 +86,7 @@ export default function ViewerDashboard({ onTabChange }) {
                   {greeting}
                 </p>
                 <h1 style={{ fontSize: 23, fontWeight: 900, color: '#fff', fontFamily: 'var(--font-num)', letterSpacing: '-0.4px' }}>
-                  Papa's Dashboard
+                  {t("Papa's Dashboard")}
                 </h1>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
@@ -112,7 +112,7 @@ export default function ViewerDashboard({ onTabChange }) {
                   onClick={logout}
                   style={{ height: 36, padding: '0 12px', borderRadius: 11, background: 'rgba(220,38,38,0.25)', border: '1px solid rgba(220,38,38,0.4)', color: '#fca5a5', fontWeight: 700, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5 }}
                 >
-                  <LogOut size={12} /> Lock
+                  <LogOut size={12} /> {t('Lock')}
                 </button>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function ViewerDashboard({ onTabChange }) {
           {/* Balance */}
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 20px 22px', zIndex: 2 }}>
             <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: 4, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Balance — {monthLabel}
+              {t("Balance — ")} {monthLabel}
             </p>
             <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', fontFamily: 'var(--font-num)', lineHeight: 1, letterSpacing: '-1.5px' }}>
               <CountUp value={stats.balance} />
@@ -135,7 +135,7 @@ export default function ViewerDashboard({ onTabChange }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
             <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(5,150,105,0.1)', border: '1.5px solid rgba(5,150,105,0.15)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Received</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t("Received")}</span>
                 <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <ArrowDownLeft size={14} color="#059669" />
                 </div>
@@ -143,11 +143,11 @@ export default function ViewerDashboard({ onTabChange }) {
               <div style={{ fontSize: 20, fontWeight: 800, color: '#059669', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
                 ₹{stats.received.toLocaleString('en-IN')}
               </div>
-              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>{t("This month")}</div>
             </div>
             <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(225,29,72,0.08)', border: '1.5px solid rgba(225,29,72,0.12)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Spent</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t("Spent")}</span>
                 <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(225,29,72,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <ArrowUpRight size={14} color="#e11d48" />
                 </div>
@@ -155,20 +155,20 @@ export default function ViewerDashboard({ onTabChange }) {
               <div style={{ fontSize: 20, fontWeight: 800, color: '#e11d48', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
                 ₹{stats.spent.toLocaleString('en-IN')}
               </div>
-              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>This month</div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>{t("This month")}</div>
             </div>
           </div>
 
           {/* Spending bar */}
           <div style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', marginBottom: 14, boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>Spending Health</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>{t("Spending Health")}</span>
               <span style={{
                 fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 999,
                 color: pctSpent > 85 ? '#dc2626' : pctSpent > 60 ? '#d97706' : '#059669',
                 background: pctSpent > 85 ? '#fee2e2' : pctSpent > 60 ? '#fef3c7' : '#d1fae5',
               }}>
-                {pctSpent > 85 ? '⚠ Over Budget' : pctSpent > 60 ? '↑ High' : '✓ On Track'}
+                {pctSpent > 85 ? t('⚠ Over Budget') : pctSpent > 60 ? t('↑ High') : t('✓ On Track')}
               </span>
             </div>
             <div style={{ width: '100%', height: 7, background: '#f3f4f6', borderRadius: 999, overflow: 'hidden' }}>
@@ -182,8 +182,8 @@ export default function ViewerDashboard({ onTabChange }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
               <span style={{ fontSize: 10, color: 'var(--t3)' }}>₹0</span>
-              <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% of ₹{stats.received.toLocaleString('en-IN')} used</span>
-              <span style={{ fontSize: 10, color: 'var(--t3)' }}>Budget</span>
+              <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% {lang === 'hi' ? 'खर्च' : 'used'} (₹{stats.received.toLocaleString('en-IN')})</span>
+              <span style={{ fontSize: 10, color: 'var(--t3)' }}>{t("Budget")}</span>
             </div>
           </div>
 
@@ -200,17 +200,17 @@ export default function ViewerDashboard({ onTabChange }) {
 
           {/* Transactions for that month */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-            <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t1)' }}>Transactions</span>
+            <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t1)' }}>{t("Transactions")}</span>
             <span style={{ fontSize: 12, color: 'var(--violet)', background: 'var(--violet-light)', padding: '3px 11px', borderRadius: 999, fontWeight: 700 }}>
-              {monthTxs.length} entries
+              {monthTxs.length} {t("entries")}
             </span>
           </div>
           <div className="card" style={{ overflow: 'hidden', marginBottom: 20 }}>
             {monthTxs.length === 0 ? (
               <div style={{ padding: '44px 20px', textAlign: 'center' }}>
                 <div style={{ fontSize: 42, marginBottom: 10 }}>📭</div>
-                <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--t1)' }}>No entries yet</p>
-                <p style={{ fontSize: 13, color: 'var(--t3)', marginTop: 4 }}>No transactions this month</p>
+                <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--t1)' }}>{t("No entries yet")}</p>
+                <p style={{ fontSize: 13, color: 'var(--t3)', marginTop: 4 }}>{t("No transactions this month")}</p>
               </div>
             ) : monthTxs.map((tx, i) => (
               <React.Fragment key={tx.id}>
