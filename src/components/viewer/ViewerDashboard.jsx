@@ -8,7 +8,7 @@ import ReceiptModal from '../shared/ReceiptModal';
 import QueryDesk from './QueryDesk';
 import { generateWhatsAppSummary, formatCurrency } from '../../utils/export';
 import { useAuth } from '../../context/AuthContext';
-import { ChevronLeft, ChevronRight, Languages } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Languages, RefreshCcw } from 'lucide-react';
 
 export default function ViewerDashboard({ onTabChange }) {
   const { getMonthTransactions, getStats, queries } = useData();
@@ -46,16 +46,40 @@ export default function ViewerDashboard({ onTabChange }) {
       <div className="bg-orb bg-orb-2" />
       <div className="page" style={{ position: 'relative', zIndex: 1 }}>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <div>
-            <p style={{ fontSize: 12, color: 'var(--t3)', fontWeight: 500, marginBottom: 2 }}>{t("Papa's View 👁️") || "Papa's View 👁️"}</p>
-            <h1 style={{ fontSize: 22, fontWeight: 800, fontFamily: 'var(--font-num)', letterSpacing: '-0.3px', color: 'var(--t1)' }}>Hisab-Kitab</h1>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button className="btn-icon" onClick={toggleLanguage} style={{ padding: '8px', borderRadius: 10 }}>
-              {lang === 'en' ? 'अ' : 'A'}
-            </button>
-            <button className="btn btn-ghost btn-sm" onClick={logout} style={{ fontSize: 12 }}>{t("Lock") || "Lock"}</button>
+        <div style={{
+          background: 'url(/viewer-bg.png) center/cover no-repeat',
+          margin: '0 -16px 20px',
+          padding: '40px 20px 30px',
+          borderRadius: '0 0 32px 32px',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+          position: 'relative'
+        }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%)', borderRadius: '0 0 32px 32px' }} />
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 4 }}>{t("Papa's View") || "Papa's View"} 👁️</p>
+                <h1 style={{ fontSize: 26, fontWeight: 800, fontFamily: 'var(--font-num)', letterSpacing: '-0.5px', color: '#fff' }}>Hisab-Kitab</h1>
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={() => window.location.reload(true)} className="btn-icon" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '8px', boxShadow: 'none' }}>
+                  <RefreshCcw size={16} />
+                </button>
+                <button className="btn-icon" onClick={toggleLanguage} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '8px 12px', boxShadow: 'none', fontWeight: 800 }}>
+                  {lang === 'en' ? 'अ' : 'A'}
+                </button>
+                <button className="btn-icon" onClick={logout} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '8px 14px', boxShadow: 'none', fontWeight: 700, fontSize: 12 }}>
+                  {t("Lock") || "Lock"}
+                </button>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <div>
+                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', fontWeight: 600, marginBottom: 4 }}>{t("Remaining Balance")}</p>
+                <div style={{ fontSize: 34, fontWeight: 800, color: '#fff', fontFamily: 'var(--font-num)', lineHeight: 1 }}>₹{stats.balance.toLocaleString('en-IN')}</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -71,8 +95,7 @@ export default function ViewerDashboard({ onTabChange }) {
           <MetricCard label={t("Received")} value={stats.received} type="received" sub={t("This month") || "This month"} />
           <MetricCard label={t("Spent")} value={stats.spent} type="spent" sub={t("This month") || "This month"} />
         </div>
-        <MetricCard label={t("Remaining Balance")} value={stats.balance} type="balance" className="mb-12" />
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: 20 }}>
           <HealthBar spent={stats.spent} received={stats.received} />
         </div>
 

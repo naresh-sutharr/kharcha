@@ -42,10 +42,10 @@
   --sky-bg:       rgba(2,132,199,0.09);
 
   /* ── Text ── */
-  --t1: #18181b;
-  --t2: #52525b;
-  --t3: #a1a1aa;
-  --t4: #d4d4d8;
+  --t1: #09090b;
+  --t2: #27272a;
+  --t3: #3f3f46;
+  --t4: #52525b;
 
   /* ── Surface ── */
   --surface:      rgba(255,255,255,0.88);
@@ -87,12 +87,12 @@ body {
   line-height: 1.5;
 }
 #root { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
-button { font-family: var(--font); }
+button { font-family: var(--font); touch-action: manipulation; }
 
 /* ══════════════════════════════════
    SCROLLABLE PAGE
 ══════════════════════════════════ */
-.page { flex:1; overflow-y:auto; padding:0 0 96px; scroll-behavior:smooth; }
+.page { flex:1; overflow-y:auto; padding:0 0 140px; scroll-behavior:smooth; }
 .page::-webkit-scrollbar { display:none; }
 .page-inner { padding: 0 16px; }
 
@@ -190,9 +190,9 @@ button { font-family: var(--font); }
    METRIC CARD
 ══════════════════════════════════ */
 .metric-card { padding:18px 18px; }
-.metric-label { font-size:11px; font-weight:600; color:var(--t3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
-.metric-value { font-size:22px; font-weight:700; font-family:var(--font-num); letter-spacing:-0.5px; }
-.metric-sub { font-size:11px; color:var(--t3); margin-top:4px; }
+.metric-label { font-size:13px; font-weight:600; color:var(--t3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+.metric-value { font-size:24px; font-weight:700; font-family:var(--font-num); letter-spacing:-0.5px; color:var(--t1); }
+.metric-sub { font-size:12px; color:var(--t3); margin-top:4px; font-weight:500; }
 .metric-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
 
 /* ══════════════════════════════════
@@ -307,9 +307,9 @@ select.input option { background:#fff; }
 .tx-card.debit::before  { background:var(--rose);    opacity:1; }
 .tx-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
 .tx-info { flex:1; min-width:0; }
-.tx-title { font-size:13.5px; font-weight:600; color:var(--t1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.1px; }
-.tx-meta  { font-size:11px; color:var(--t3); margin-top:2px; font-weight:500; }
-.tx-amount { font-size:14px; font-weight:700; font-family:var(--font-num); letter-spacing:-0.3px; }
+.tx-title { font-size:15px; font-weight:600; color:var(--t1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.1px; }
+.tx-meta  { font-size:12px; color:var(--t3); margin-top:2px; font-weight:500; }
+.tx-amount { font-size:16px; font-weight:700; font-family:var(--font-num); letter-spacing:-0.3px; }
 .tx-amount.credit { color:var(--emerald); }
 .tx-amount.debit  { color:var(--rose); }
 
@@ -351,7 +351,7 @@ select.input option { background:#fff; }
   display:flex; flex-direction:column; align-items:center; gap:3px;
   padding:6px 16px; cursor:pointer; transition:all var(--t);
   border-radius:12px; color:var(--t3);
-  font-size:9.5px; font-weight:700; text-transform:uppercase;
+  font-size:10.5px; font-weight:700; text-transform:uppercase;
   letter-spacing:0.06em; background:none; border:none; font-family:var(--font);
 }
 .nav-item.active { color:var(--violet); }
