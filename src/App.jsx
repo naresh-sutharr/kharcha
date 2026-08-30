@@ -7,6 +7,8 @@ import BottomNav from './components/shared/BottomNav';
 
 import { notifyPapaAppOpen } from './utils/notify';
 
+import PushNotificationManager from './components/shared/PushNotificationManager';
+
 // Admin screens
 import AdminDashboard from './components/admin/AdminDashboard';
 import TransactionFeed from './components/admin/TransactionFeed';
@@ -71,6 +73,7 @@ export default function App() {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+      <PushNotificationManager role={role} />
       {renderScreen()}
       <BottomNav role={role} active={activeTab} onChange={setActiveTab} queryCount={pendingQueryCount} />
     </div>
