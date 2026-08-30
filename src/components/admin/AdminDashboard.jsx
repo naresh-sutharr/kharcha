@@ -29,7 +29,7 @@ function AnimatedNumber({ value }) {
 export default function AdminDashboard({ onTabChange }) {
   const { transactions, queries, getMonthTransactions, getStats, CATEGORIES } = useData();
   const { logout } = useAuth();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   
   const now = new Date();
   const [viewYear, setViewYear]   = useState(now.getFullYear());

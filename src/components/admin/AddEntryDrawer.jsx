@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useData, CATEGORIES } from '../../context/DataContext';
 import { X, Camera, Trash2 } from 'lucide-react';
+import { translateToHindi } from '../../utils/translate';
 
 const MAX_RECEIPT_SIZE = 500 * 1024; // 500KB
 
@@ -14,6 +15,7 @@ export default function AddEntryDrawer({ onClose, editTx, defaultType }) {
   const [time, setTime] = useState(editTx?.time || new Date().toTimeString().slice(0, 5));
   const [receipt, setReceipt] = useState(editTx?.receipt || null);
   const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const fileRef = useRef();
 
   function handleReceipt(e) {
@@ -25,11 +27,20 @@ export default function AddEntryDrawer({ onClose, editTx, defaultType }) {
     reader.readAsDataURL(file);
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) { setError('Please enter a valid amount'); return; }
-    const data = { type, amount: Number(amount), category: type === 'credit' ? 'misc' : category, note, date, time, receipt };
+    
+    setIsSaving(true);
+    let finalNote = note;
+    if (finalNote && finalNote.trim()) {
+      finalNote = await translateToHindi(finalNote);
+    }
+
+    const data = { type, amount: Number(amount), category: type === 'credit' ? 'misc' : category, note: finalNote, date, time, receipt };
     if (editTx) editTransaction(editTx.id, data);
     else addTransaction(data);
+    
+    setIsSaving(false);
     onClose();
   }
 
@@ -114,8 +125,8 @@ export default function AddEntryDrawer({ onClose, editTx, defaultType }) {
 
         {error && <p style={{ color: 'var(--red)', fontSize: 13, marginBottom: 12, fontWeight: 500 }}>{error}</p>}
 
-        <button className="btn btn-primary btn-full" onClick={handleSave} style={{ fontSize: 16 }}>
-          {editTx ? 'Save Changes' : 'Add Entry ✓'}
+        <button className="btn btn-primary btn-full" onClick={handleSave} disabled={isSaving} style={{ fontSize: 16 }}>
+          {isSaving ? 'Translating & Saving...' : (editTx ? 'Save Changes' : 'Add Entry ✓')}
         </button>
       </div>
     </div>
