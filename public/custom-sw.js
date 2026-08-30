@@ -9,12 +9,13 @@ self.addEventListener('push', function(event) {
   }
 
   const title = data.title || 'Hisab Kitab';
-  const iconUrl = self.location.origin + '/icons/icon-192.png';
+  const iconUrl = self.location.origin + '/logo.jpeg';
+  const badgeUrl = self.location.origin + '/icons/icon-192.png';
   
   const options = {
     body: data.message || '',
     icon: iconUrl,
-    badge: iconUrl,
+    badge: badgeUrl,
     vibrate: [200, 100, 200],
     data: { url: self.location.origin }
   };
