@@ -35,17 +35,17 @@ export default async function handler(req, res) {
 
     const subscription = parseFirestoreValue(data.fields.pushSubscription);
 
-    // Funny/Nice random messages for the CRON job
+    // Professional, enterprise-grade messages for the CRON job
     const messages = [
-      "🙏 Swagat hai Naresh ke Hisab Kitab app me!",
-      "😊 Papa, aaj ka din kaisa raha? App khol ke dashboard dekhiye.",
-      "✨ Kharcha App par aapka swagat hai!",
-      "💸 Apne transactions check karne ke liye app check karein."
+      "Welcome to Naresh's Secure Ledger. Your dashboard is synced.",
+      "Your daily financial summary is now available to view.",
+      "All recent transactions have been successfully synced & recorded.",
+      "Financial records updated. Tap to review the latest ledger entries."
     ];
     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
     const payload = {
-      title: "Daily Update",
+      title: "Kharcha Financial Portal",
       message: randomMsg
     };
 
