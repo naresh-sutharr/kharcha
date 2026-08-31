@@ -60,12 +60,14 @@ export default function App() {
     if (role === 'admin') {
       if (activeTab === 'dashboard') return <AdminDashboard onTabChange={setActiveTab} />;
       if (activeTab === 'transactions') return <TransactionFeed />;
+      if (activeTab === 'fixed') return <TransactionFeed isFixedOnly={true} />;
       if (activeTab === 'queries') return <QueryThread />;
       if (activeTab === 'settings') return <Settings />;
     }
     if (role === 'viewer') {
       if (activeTab === 'dashboard') return <ViewerDashboard onTabChange={setActiveTab} />;
       if (activeTab === 'transactions') return <TransactionFeed isViewer={true} />;
+      if (activeTab === 'fixed') return <TransactionFeed isViewer={true} isFixedOnly={true} />;
       if (activeTab === 'queries') return <AllViewerQueries />;
     }
     return null;

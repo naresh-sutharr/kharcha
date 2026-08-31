@@ -7,11 +7,11 @@ import { Plus, Trash2, Edit2 } from 'lucide-react';
 
 import { useLang } from '../../context/LanguageContext';
 
-export default function TransactionFeed({ isViewer = false }) {
+export default function TransactionFeed({ isViewer = false, isFixedOnly = false }) {
   const { transactions, queries, deleteTransaction, CATEGORIES } = useData();
   const { t } = useLang();
   const [filterCat, setFilterCat] = useState('all');
-  const [filterType, setFilterType] = useState('all');
+  const [filterType, setFilterType] = useState(isFixedOnly ? 'fixed' : 'all');
   const [selectedTx, setSelectedTx] = useState(null);
   const [editTx, setEditTx] = useState(null);
   const [showDrawer, setShowDrawer] = useState(false);
@@ -34,16 +34,18 @@ export default function TransactionFeed({ isViewer = false }) {
     <>
       <div className="page" style={isViewer ? { paddingTop: 20 } : {}}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800 }}>{t("All Records")}</h1>
+          <h1 style={{ fontSize: 22, fontWeight: 800 }}>{isFixedOnly ? t("Rent & Fees") : t("All Records")}</h1>
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{filtered.length} {t("entries")}</span>
         </div>
 
         {/* Type Filter */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-          {[['all','All'],['credit','Received'],['debit','Expense']].map(([v,l]) => (
-            <button key={v} className={`chip ${filterType === v ? 'active' : ''}`} onClick={() => setFilterType(v)}>{t(l)}</button>
-          ))}
-        </div>
+        {!isFixedOnly && (
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            {[['all','All'],['credit','Received'],['debit','Expense']].map(([v,l]) => (
+              <button key={v} className={`chip ${filterType === v ? 'active' : ''}`} onClick={() => setFilterType(v)}>{t(l)}</button>
+            ))}
+          </div>
+        )}
 
         {/* Category Filter */}
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 16 }}>
@@ -94,7 +96,7 @@ export default function TransactionFeed({ isViewer = false }) {
       )}
 
       {selectedTx && <ReceiptModal tx={selectedTx} onClose={() => setSelectedTx(null)} />}
-      {showDrawer && <AddEntryDrawer onClose={() => { setShowDrawer(false); setEditTx(null); }} editTx={editTx} />}
+      {showDrawer && <AddEntryDrawer onClose={() => { setShowDrawer(false); setEditTx(null); }} editTx={editTx} defaultType={isFixedOnly ? 'fixed' : 'debit'} />}
     </>
   );
 }

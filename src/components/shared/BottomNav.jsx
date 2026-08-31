@@ -1,16 +1,18 @@
 import React from 'react';
-import { LayoutDashboard, ListOrdered, MessageCircle, Settings } from 'lucide-react';
+import { LayoutDashboard, ListOrdered, MessageCircle, Settings, Home } from 'lucide-react';
 import { useLang } from '../../context/LanguageContext';
 
 const adminTabs = [
   { id:'dashboard',    label:'Home',     Icon:LayoutDashboard },
   { id:'transactions', label:'Records',  Icon:ListOrdered },
+  { id:'fixed',        label:'Rent',     Icon:Home },
   { id:'queries',      label:'Queries',  Icon:MessageCircle },
   { id:'settings',     label:'Settings', Icon:Settings },
 ];
 const viewerTabs = [
   { id:'dashboard', label:'Home',   Icon:LayoutDashboard },
   { id:'transactions', label:'Records', Icon:ListOrdered },
+  { id:'fixed',        label:'Rent',     Icon:Home },
   { id:'queries',   label:'Ask',    Icon:MessageCircle },
 ];
 
