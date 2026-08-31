@@ -6,18 +6,16 @@ export async function translateToHindi(text) {
   if (!text || !text.trim()) return '';
   
   try {
-    const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|hi`
-    );
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(text)}`;
+    const response = await fetch(url);
     const data = await response.json();
     
-    // Check if valid response
-    if (data.responseData && data.responseData.translatedText) {
-      return data.responseData.translatedText;
+    if (data && data[0]) {
+      return data[0].map(item => item[0]).join('');
     }
-    return text; // fallback to original if API fails
+    return text;
   } catch (err) {
     console.error('Translation failed:', err);
-    return text; // fallback
+    return text;
   }
 }
