@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Eye } from 'lucide-react';
+import { ShieldCheck, Eye, Lock } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 
 export default function RoleSelect({ onSelectRole }) {
@@ -32,68 +32,99 @@ export default function RoleSelect({ onSelectRole }) {
   ];
 
   return (
-    <div style={{
-      minHeight:'100vh', display:'flex', flexDirection:'column',
-      alignItems:'center', justifyContent:'center', padding:'32px 20px',
-      background:'var(--mesh)', gap:36, position:'relative', overflow:'hidden',
-    }}>
-      {/* Logo */}
-      <div style={{ textAlign:'center' }}>
-        <img src="/logo.jpeg" alt="Hisab-Kitab" style={{
-          width: 86, height: 86, borderRadius: 26, margin: '0 auto 18px',
-          boxShadow: '0 12px 36px rgba(124,58,237,0.35)', objectFit: 'cover'
+    <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', background: '#09090b' }}>
+      
+      {/* Hero Image Section */}
+      <div style={{ 
+        position: 'absolute', top: 0, left: 0, right: 0, height: '60vh',
+        backgroundImage: 'url(/hero.png)', backgroundSize: 'cover', backgroundPosition: 'center',
+        animation: 'fadeIn 0.8s ease-out'
+      }}>
+        {/* Soft gradient overlay so the bottom sheet blends smoothly */}
+        <div style={{ 
+          position: 'absolute', inset: 0, 
+          background: 'linear-gradient(to bottom, rgba(9,9,11,0) 40%, rgba(9,9,11,1) 100%)' 
         }} />
-        <h1 style={{ fontSize:30, fontWeight:900, color:'var(--t1)', fontFamily:'var(--font-num)', letterSpacing:'-1px', lineHeight:1 }}>
-          Hisab-Kitab
-        </h1>
-        <p style={{ fontSize:13, color:'var(--t3)', marginTop:8, fontWeight:500 }}>
-          Family Ledger · {t('Choose your role')}
-        </p>
       </div>
 
-      {/* Cards */}
-      <div style={{ width:'100%', maxWidth:340, display:'flex', flexDirection:'column', gap:12 }}>
-        {cards.map(c => {
-          const isH = hovered === c.role;
-          return (
-            <button
-              key={c.role}
-              onClick={() => onSelectRole(c.role)}
-              onMouseEnter={() => setHovered(c.role)}
-              onMouseLeave={() => setHovered(null)}
-              style={{
-                display:'flex', alignItems:'center', gap:16, padding:'18px 18px',
-                borderRadius:18, cursor:'pointer', textAlign:'left', width:'100%',
-                background: isH ? c.light : 'rgba(255,255,255,0.85)',
-                border:`1.5px solid ${isH ? c.border : 'rgba(0,0,0,0.06)'}`,
-                backdropFilter:'blur(20px)',
-                boxShadow: isH ? `0 10px 32px ${c.glow}` : 'var(--shadow)',
-                transition:'all 0.2s var(--ease)',
-              }}
-            >
-              <div style={{
-                width:50, height:50, borderRadius:14, flexShrink:0,
-                display:'flex', alignItems:'center', justifyContent:'center',
-                background: isH ? c.grad : c.light,
-                color: isH ? '#fff' : c.color,
-                border:`1px solid ${c.border}`,
-                transition:'all 0.2s var(--ease)',
-                boxShadow: isH ? `0 4px 16px ${c.glow}` : 'none',
-              }}>{c.icon}</div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:15.5, fontWeight:800, color:'var(--t1)', fontFamily:'var(--font-num)', letterSpacing:'-0.3px' }}>{c.title}</div>
-                <div style={{ fontSize:12, color:'var(--t3)', marginTop:3, fontWeight:500 }}>{c.sub}</div>
-              </div>
-              <span style={{ fontSize:18, color:isH?c.color:'var(--t4)', transition:'transform 0.2s var(--ease)', transform:isH?'translateX(3px)':'none' }}>›</span>
-            </button>
-          );
-        })}
-      </div>
+      {/* Bottom Sheet Section */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: 'rgba(255, 255, 255, 0.96)', 
+        backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
+        borderRadius: '32px 32px 0 0', padding: '36px 24px 48px',
+        borderTop: '1px solid rgba(255,255,255,0.8)',
+        boxShadow: '0 -20px 60px rgba(0,0,0,0.2)',
+        animation: 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        display: 'flex', flexDirection: 'column', gap: '28px'
+      }}>
+        
+        {/* Header with mini logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <img src="/logo.jpeg" alt="Logo" style={{
+            width: 52, height: 52, borderRadius: 16,
+            boxShadow: '0 8px 20px rgba(124,58,237,0.25)', objectFit: 'cover'
+          }} />
+          <div>
+            <h1 style={{ fontSize: 26, fontWeight: 900, color: 'var(--t1)', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px', lineHeight: 1.1 }}>
+              Hisab-Kitab
+            </h1>
+            <p style={{ fontSize: 13, color: 'var(--t3)', marginTop: 4, fontWeight: 500 }}>
+              {t('Manage Family Finances Transparently')}
+            </p>
+          </div>
+        </div>
 
-      {/* Bottom note */}
-      <p style={{ fontSize:11, color:'var(--t3)', textAlign:'center', fontWeight:500 }}>
-        🔐 {t('Secured with PIN · Auto-locks after 3 min')}
-      </p>
+        {/* Action Cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 700, color: 'var(--t3)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 6, marginLeft: 4 }}>
+            {t('Choose your role')}
+          </h2>
+          
+          {cards.map(c => {
+            const isH = hovered === c.role;
+            return (
+              <button
+                key={c.role}
+                onClick={() => onSelectRole(c.role)}
+                onMouseEnter={() => setHovered(c.role)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 16, padding: '18px',
+                  borderRadius: 22, cursor: 'pointer', textAlign: 'left', width: '100%',
+                  background: isH ? c.light : '#fff',
+                  border: `1.5px solid ${isH ? c.border : 'rgba(0,0,0,0.06)'}`,
+                  boxShadow: isH ? `0 8px 24px ${c.glow}` : '0 4px 12px rgba(0,0,0,0.03)',
+                  transition: 'all 0.25s var(--ease)',
+                }}
+              >
+                <div style={{
+                  width: 50, height: 50, borderRadius: 16, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isH ? c.grad : c.light,
+                  color: isH ? '#fff' : c.color,
+                  border: `1px solid ${c.border}`,
+                  transition: 'all 0.25s var(--ease)',
+                }}>{c.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 17, fontWeight: 800, color: 'var(--t1)', fontFamily: 'var(--font-num)', letterSpacing: '-0.3px' }}>{c.title}</div>
+                  <div style={{ fontSize: 12.5, color: 'var(--t3)', marginTop: 2, fontWeight: 500 }}>{c.sub}</div>
+                </div>
+                <span style={{ fontSize: 22, color: isH ? c.color : 'var(--t4)', transition: 'transform 0.25s var(--ease)', transform: isH ? 'translateX(4px)' : 'none' }}>›</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Security Note */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 4 }}>
+          <Lock size={12} color="var(--t3)" />
+          <p style={{ fontSize: 12, color: 'var(--t3)', fontWeight: 600 }}>
+            {t('Secured with PIN · Auto-locks after 3 min')}
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
