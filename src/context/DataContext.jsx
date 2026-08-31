@@ -78,6 +78,7 @@ export function DataProvider({ children }) {
     // Send push notification to Papa via ntfy.sh
     if (data.type === 'debit')  notifyExpense(data.amount, data.category, data.note);
     if (data.type === 'credit') notifyReceived(data.amount, data.note);
+    if (data.type === 'fixed')  notifyExpense(data.amount, data.category, data.note);
 
     return { id, ...tx };
   }
@@ -121,7 +122,8 @@ export function DataProvider({ children }) {
   function getStats(txList) {
     const received = txList.filter(t => t.type === 'credit').reduce((s, t) => s + t.amount, 0);
     const spent    = txList.filter(t => t.type === 'debit').reduce((s,  t) => s + t.amount, 0);
-    return { received, spent, balance: received - spent };
+    const fixed    = txList.filter(t => t.type === 'fixed').reduce((s,  t) => s + t.amount, 0);
+    return { received, spent, fixed, balance: received - spent };
   }
 
   async function clearAllData() {

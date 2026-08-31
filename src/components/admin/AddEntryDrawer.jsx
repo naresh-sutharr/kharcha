@@ -55,12 +55,12 @@ export default function AddEntryDrawer({ onClose, editTx, defaultType }) {
         </div>
 
         {/* Type Toggle */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 20 }}>
-          {[['debit', '💸 Expense'], ['credit', '💰 Received from Papa']].map(([t, label]) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 20 }}>
+          {[['debit', '💸 Expense'], ['credit', '💰 Received'], ['fixed', '🏠 Fixed']].map(([t, label]) => (
             <button key={t} className="btn" onClick={() => setType(t)} style={{
-              background: type === t ? (t === 'credit' ? 'var(--green)' : 'var(--red)') : 'var(--glass-bg)',
+              background: type === t ? (t === 'credit' ? 'var(--emerald)' : t === 'fixed' ? 'var(--sky)' : 'var(--rose)') : 'var(--surface)',
               color: type === t ? '#fff' : 'var(--text-secondary)',
-              border: '1.5px solid var(--border)', padding: '12px 8px', fontSize: 13,
+              border: '1.5px solid var(--border)', padding: '12px 4px', fontSize: 12,
             }}>
               {label}
             </button>
@@ -73,8 +73,8 @@ export default function AddEntryDrawer({ onClose, editTx, defaultType }) {
           <input className="input" type="number" placeholder="0" value={amount} onChange={e => setAmount(e.target.value)} inputMode="decimal" style={{ fontSize: 24, fontWeight: 700 }} />
         </div>
 
-        {/* Category (debit only) */}
-        {type === 'debit' && (
+        {/* Category (debit and fixed only) */}
+        {(type === 'debit' || type === 'fixed') && (
           <div style={{ marginBottom: 16 }}>
             <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 8 }}>Category</label>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>

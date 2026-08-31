@@ -157,6 +157,23 @@ export default function ViewerDashboard({ onTabChange }) {
               </div>
               <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>{t("This month")}</div>
             </div>
+            
+            {stats.fixed > 0 && (
+              <div style={{ gridColumn: '1 / -1', background: '#fff', borderRadius: 18, padding: '14px 16px', boxShadow: '0 4px 18px rgba(2,132,199,0.08)', border: '1.5px solid rgba(2,132,199,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                    <div style={{ width: 22, height: 22, borderRadius: 6, background: 'rgba(2,132,199,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontSize: 11 }}>🏠</span>
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t("Fixed (Rent/Fees)")}</span>
+                  </div>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500, marginLeft: 28 }}>{t("Paid this month")}</div>
+                </div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: '#0284c7', fontFamily: 'var(--font-num)', letterSpacing: '-0.3px' }}>
+                  ₹{stats.fixed.toLocaleString('en-IN')}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Spending bar */}

@@ -8,6 +8,7 @@ export default function TransactionCard({ tx, queries = [], onTap, onFlag, isVie
   const { lang, t } = useLang();
   const cat = CATEGORIES.find(c => c.id === tx.category) || CATEGORIES[CATEGORIES.length - 1];
   const isCredit = tx.type === 'credit';
+  const isFixed = tx.type === 'fixed';
   const hasQuery = queries.length > 0;
   const unanswered = hasQuery && queries.some(q => q.from === 'viewer' && !queries.find(r => r.from === 'admin' && r.time > q.time));
 
@@ -16,13 +17,13 @@ export default function TransactionCard({ tx, queries = [], onTap, onFlag, isVie
 
   return (
     <div
-      className={`tx-card ${isCredit ? 'credit' : 'debit'}`}
+      className={`tx-card ${tx.type}`}
       onClick={() => onTap && onTap(tx)}
     >
       {/* Icon */}
       <div className="tx-icon" style={{
-        background: isCredit ? 'var(--emerald-bg)' : 'rgba(0,0,0,0.04)',
-        border: `1px solid ${isCredit ? 'var(--emerald-bdr)' : 'rgba(0,0,0,0.06)'}`,
+        background: isCredit ? 'var(--emerald-bg)' : isFixed ? 'var(--sky-bg)' : 'rgba(0,0,0,0.04)',
+        border: `1px solid ${isCredit ? 'var(--emerald-bdr)' : isFixed ? 'rgba(2,132,199,0.15)' : 'rgba(0,0,0,0.06)'}`,
       }}>
         <span>{isCredit ? '💰' : cat.emoji}</span>
       </div>
@@ -33,7 +34,11 @@ export default function TransactionCard({ tx, queries = [], onTap, onFlag, isVie
         <div className="tx-meta">
           <span>{formatDate(tx.date)}</span>
           <span style={{ margin:'0 4px' }}>·</span>
-          <span style={{ background: isCredit ? 'var(--emerald-bg)' : 'var(--rose-bg)', color: isCredit ? 'var(--emerald)' : 'var(--rose)', padding:'1px 7px', borderRadius:999, fontWeight:600 }}>
+          <span style={{ 
+            background: isCredit ? 'var(--emerald-bg)' : isFixed ? 'var(--sky-bg)' : 'var(--rose-bg)', 
+            color: isCredit ? 'var(--emerald)' : isFixed ? 'var(--sky)' : 'var(--rose)', 
+            padding:'1px 7px', borderRadius:999, fontWeight:600 
+          }}>
             {t(isCredit ? cat.label !== 'Misc' ? cat.label : 'Credit' : cat.label)}
           </span>
           {tx.receipt && <><span style={{ margin:'0 4px' }}>·</span><Receipt size={10} style={{ display:'inline', verticalAlign:'middle', color:'var(--violet)' }}/></>}
@@ -42,7 +47,7 @@ export default function TransactionCard({ tx, queries = [], onTap, onFlag, isVie
 
       {/* Amount + actions */}
       <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6 }}>
-        <span className={`tx-amount ${isCredit ? 'credit' : 'debit'}`}>
+        <span className={`tx-amount ${tx.type}`}>
           {isCredit ? '+' : '−'}{formatCurrency(tx.amount)}
         </span>
         {isViewer ? (

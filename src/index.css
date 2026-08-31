@@ -305,6 +305,7 @@ select.input option { background:#fff; }
 }
 .tx-card.credit::before { background:var(--emerald); opacity:1; }
 .tx-card.debit::before  { background:var(--rose);    opacity:1; }
+.tx-card.fixed::before  { background:var(--sky);     opacity:1; }
 .tx-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
 .tx-info { flex:1; min-width:0; }
 .tx-title { font-size:15px; font-weight:600; color:var(--t1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:-0.1px; }
@@ -312,6 +313,7 @@ select.input option { background:#fff; }
 .tx-amount { font-size:16px; font-weight:700; font-family:var(--font-num); letter-spacing:-0.3px; }
 .tx-amount.credit { color:var(--emerald); }
 .tx-amount.debit  { color:var(--rose); }
+.tx-amount.fixed  { color:var(--sky); }
 
 /* ══════════════════════════════════
    LOCK SCREEN

@@ -102,6 +102,7 @@ export default function AdminDashboard({ onTabChange }) {
             <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               <div className="stat-pill"><ArrowDownLeft size={11}/> Rcvd ₹{stats.received.toLocaleString('en-IN')}</div>
               <div className="stat-pill"><ArrowUpRight size={11}/> Spent ₹{stats.spent.toLocaleString('en-IN')}</div>
+              {stats.fixed > 0 && <div className="stat-pill" style={{ background:'rgba(2,132,199,0.3)', borderColor:'rgba(2,132,199,0.4)' }}>🏠 Fixed ₹{stats.fixed.toLocaleString('en-IN')}</div>}
               {spentDiff !== null && (
                 <div className="stat-pill" style={{ background: Number(spentDiff)>0 ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)' }}>
                   {Number(spentDiff)>0 ? '↑' : '↓'} {Math.abs(spentDiff)}% vs last month
@@ -113,7 +114,7 @@ export default function AdminDashboard({ onTabChange }) {
 
         {/* ═══ QUICK ACTIONS ═══ */}
         <div style={{ padding:'0 16px', marginTop:16, marginBottom:16 }}>
-          <div style={{ display:'flex', gap:10 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
             <button className="qa-btn" onClick={()=>{ setDrawerType('credit'); setShowDrawer(true); }}>
               <div className="qa-icon" style={{ background:'rgba(5,150,105,0.1)' }}>💰</div>
               <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Received")}</span>
@@ -123,6 +124,11 @@ export default function AdminDashboard({ onTabChange }) {
               <div className="qa-icon" style={{ background:'rgba(225,29,72,0.08)' }}>💸</div>
               <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Expense")}</span>
               <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>{t("add spending")}</span>
+            </button>
+            <button className="qa-btn" onClick={()=>{ setDrawerType('fixed'); setShowDrawer(true); }}>
+              <div className="qa-icon" style={{ background:'rgba(2,132,199,0.09)' }}>🏠</div>
+              <span style={{ fontSize:12, fontWeight:700, color:'var(--t1)' }}>{t("Rent/Fees")}</span>
+              <span style={{ fontSize:10, color:'var(--t3)', fontWeight:500 }}>{t("fixed expenses")}</span>
             </button>
             <button className="qa-btn" onClick={()=>onTabChange('transactions')}>
               <div className="qa-icon" style={{ background:'rgba(124,58,237,0.08)' }}>📋</div>
