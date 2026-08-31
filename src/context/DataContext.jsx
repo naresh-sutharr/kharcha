@@ -119,6 +119,17 @@ export function DataProvider({ children }) {
     });
   }
 
+  function getCarryOverBalance(year, month) {
+    const pastTxs = transactions.filter(t => {
+      const d = new Date(t.date);
+      if (d.getFullYear() < year) return true;
+      if (d.getFullYear() === year && d.getMonth() < month) return true;
+      return false;
+    });
+    const { received, spent } = getStats(pastTxs);
+    return received - spent;
+  }
+
   function getStats(txList) {
     const received = txList.filter(t => t.type === 'credit').reduce((s, t) => s + t.amount, 0);
     const spent    = txList.filter(t => t.type === 'debit').reduce((s,  t) => s + t.amount, 0);
@@ -136,7 +147,7 @@ export function DataProvider({ children }) {
     <DataContext.Provider value={{
       transactions, queries,
       addTransaction, editTransaction, deleteTransaction,
-      addQuery, getMonthTransactions, getStats, clearAllData, CATEGORIES,
+      addQuery, getMonthTransactions, getCarryOverBalance, getStats, clearAllData, CATEGORIES,
     }}>
       {children}
     </DataContext.Provider>

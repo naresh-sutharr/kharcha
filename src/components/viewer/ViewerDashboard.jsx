@@ -31,7 +31,7 @@ function CountUp({ value, prefix = '₹' }) {
 }
 
 export default function ViewerDashboard({ onTabChange }) {
-  const { getMonthTransactions, getStats, queries, transactions } = useData();
+  const { getMonthTransactions, getStats, getCarryOverBalance, queries, transactions } = useData();
   const { logout } = useAuth();
   const { lang, toggleLanguage, t } = useLang();
 
@@ -42,10 +42,14 @@ export default function ViewerDashboard({ onTabChange }) {
   const [flagTx,    setFlagTx]    = useState(null);
   const [showNotif, setShowNotif] = useState(false);
 
+  const carryOver = getCarryOverBalance(viewYear, viewMonth);
   const monthTxs = getMonthTransactions(viewYear, viewMonth);
   const stats    = getStats(monthTxs);
-  const pctSpent = stats.received > 0
-    ? Math.min((stats.spent / stats.received) * 100, 100)
+  const totalAvailable = carryOver + stats.received;
+  const currentBalance = totalAvailable - stats.spent;
+  
+  const pctSpent = totalAvailable > 0
+    ? Math.min((stats.spent / totalAvailable) * 100, 100)
     : 0;
 
   const monthLabel = new Date(viewYear, viewMonth).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' });
@@ -124,7 +128,7 @@ export default function ViewerDashboard({ onTabChange }) {
               {t("Balance — ")} {monthLabel}
             </p>
             <div style={{ fontSize: 42, fontWeight: 900, color: '#fff', fontFamily: 'var(--font-num)', lineHeight: 1, letterSpacing: '-1.5px' }}>
-              <CountUp value={stats.balance} />
+              <CountUp value={currentBalance} />
             </div>
           </div>
         </div>
@@ -143,7 +147,9 @@ export default function ViewerDashboard({ onTabChange }) {
               <div style={{ fontSize: 20, fontWeight: 800, color: '#059669', fontFamily: 'var(--font-num)', letterSpacing: '-0.5px' }}>
                 ₹{stats.received.toLocaleString('en-IN')}
               </div>
-              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>{t("This month")}</div>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginTop: 3, fontWeight: 500 }}>
+                {t("This month")} {carryOver > 0 ? `+ ₹${carryOver} prev` : ''}
+              </div>
             </div>
             <div style={{ background: '#fff', borderRadius: 18, padding: '16px', boxShadow: '0 4px 18px rgba(225,29,72,0.08)', border: '1.5px solid rgba(225,29,72,0.12)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -199,7 +205,7 @@ export default function ViewerDashboard({ onTabChange }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
               <span style={{ fontSize: 10, color: 'var(--t3)' }}>₹0</span>
-              <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% {lang === 'hi' ? 'खर्च' : 'used'} (₹{stats.received.toLocaleString('en-IN')})</span>
+              <span style={{ fontSize: 11, color: 'var(--t3)', fontWeight: 600 }}>{pctSpent.toFixed(0)}% {lang === 'hi' ? 'खर्च' : 'used'} (₹{totalAvailable.toLocaleString('en-IN')})</span>
               <span style={{ fontSize: 10, color: 'var(--t3)' }}>{t("Budget")}</span>
             </div>
           </div>

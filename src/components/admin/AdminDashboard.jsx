@@ -27,7 +27,7 @@ function AnimatedNumber({ value }) {
 }
 
 export default function AdminDashboard({ onTabChange }) {
-  const { transactions, queries, getMonthTransactions, getStats, CATEGORIES } = useData();
+  const { transactions, queries, getMonthTransactions, getCarryOverBalance, getStats, CATEGORIES } = useData();
   const { logout } = useAuth();
   const { t, lang } = useLang();
   
@@ -39,8 +39,12 @@ export default function AdminDashboard({ onTabChange }) {
   const [showDrawer, setShowDrawer] = useState(false);
   const [drawerType, setDrawerType] = useState(null);
 
+  const carryOver = getCarryOverBalance(viewYear, viewMonth);
   const monthTxs  = getMonthTransactions(viewYear, viewMonth);
   const stats     = getStats(monthTxs);
+
+  const totalAvailable = carryOver + stats.received;
+  const currentBalance = totalAvailable - stats.spent;
   const prevMonthTxs = getMonthTransactions(viewYear === now.getFullYear() && viewMonth === 0 ? viewYear-1 : viewYear, viewMonth === 0 ? 11 : viewMonth-1);
   const prevStats = getStats(prevMonthTxs);
   const spentDiff = prevStats.spent > 0 ? (((stats.spent - prevStats.spent) / prevStats.spent) * 100).toFixed(0) : null;
@@ -52,7 +56,7 @@ export default function AdminDashboard({ onTabChange }) {
   const monthLabel = new Date(viewYear, viewMonth).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' });
   const pendingQ   = Object.values(queries).flat().filter(q => q.from === 'viewer').length;
 
-  const pctSpent  = stats.received > 0 ? Math.min((stats.spent / stats.received) * 100, 100) : 0;
+  const pctSpent  = totalAvailable > 0 ? Math.min((stats.spent / totalAvailable) * 100, 100) : 0;
   const pctLeft   = 100 - pctSpent;
 
   function prevMonth() { if (viewMonth===0){setViewMonth(11);setViewYear(y=>y-1);}else setViewMonth(m=>m-1); }
@@ -88,7 +92,7 @@ export default function AdminDashboard({ onTabChange }) {
           <div className="page-hero-card" style={{ position:'relative', zIndex:1 }}>
             <p style={{ fontSize:11, fontWeight:600, color:'rgba(255,255,255,0.65)', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:6 }}>Remaining Balance</p>
             <div style={{ fontSize:38, fontWeight:800, color:'#fff', fontFamily:'var(--font-num)', letterSpacing:'-1px', lineHeight:1 }}>
-              <AnimatedNumber value={stats.balance} />
+              <AnimatedNumber value={currentBalance} />
             </div>
 
             {/* Progress bar */}
@@ -101,6 +105,7 @@ export default function AdminDashboard({ onTabChange }) {
             {/* Quick stats row */}
             <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
               <div className="stat-pill"><ArrowDownLeft size={11}/> Rcvd ₹{stats.received.toLocaleString('en-IN')}</div>
+              {carryOver > 0 && <div className="stat-pill">👛 Last Month ₹{carryOver.toLocaleString('en-IN')}</div>}
               <div className="stat-pill"><ArrowUpRight size={11}/> Spent ₹{stats.spent.toLocaleString('en-IN')}</div>
               {stats.fixed > 0 && <div className="stat-pill" style={{ background:'rgba(2,132,199,0.3)', borderColor:'rgba(2,132,199,0.4)' }}>🏠 Fixed ₹{stats.fixed.toLocaleString('en-IN')}</div>}
               {spentDiff !== null && (
@@ -170,7 +175,7 @@ export default function AdminDashboard({ onTabChange }) {
             </div>
             <div style={{ display:'flex', justifyContent:'space-between', marginTop:7 }}>
               <span style={{ fontSize:10.5, color:'var(--t3)' }}>₹0</span>
-              <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600 }}>{pctSpent.toFixed(0)}% {t('used')} (₹{stats.received.toLocaleString('en-IN')})</span>
+              <span style={{ fontSize:11, color:'var(--t3)', fontWeight:600 }}>{pctSpent.toFixed(0)}% {t('used')} (₹{totalAvailable.toLocaleString('en-IN')})</span>
               <span style={{ fontSize:10.5, color:'var(--t3)' }}>{t("Budget")}</span>
             </div>
           </div>
