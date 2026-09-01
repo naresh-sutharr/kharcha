@@ -40,7 +40,7 @@ export default function AdminDashboard({ onTabChange }) {
   const [drawerType, setDrawerType] = useState(null);
 
   const carryOver = getCarryOverBalance(viewYear, viewMonth);
-  const monthTxs  = getMonthTransactions(viewYear, viewMonth);
+  const monthTxs  = getMonthTransactions(viewYear, viewMonth).filter(t => t.type !== 'fixed');
   const stats     = getStats(monthTxs);
 
   const totalAvailable = carryOver + stats.received;

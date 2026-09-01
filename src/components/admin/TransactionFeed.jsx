@@ -20,6 +20,9 @@ export default function TransactionFeed({ isViewer = false, isFixedOnly = false 
   const CATS = [{ id: 'all', label: 'All', emoji: '📋' }, ...CATEGORIES];
 
   const filtered = transactions.filter(t => {
+    if (isFixedOnly && t.type !== 'fixed') return false;
+    if (!isFixedOnly && t.type === 'fixed') return false;
+
     if (filterType !== 'all' && t.type !== filterType) return false;
     if (filterCat !== 'all' && t.category !== filterCat) return false;
     return true;

@@ -43,7 +43,7 @@ export default function ViewerDashboard({ onTabChange }) {
   const [showNotif, setShowNotif] = useState(false);
 
   const carryOver = getCarryOverBalance(viewYear, viewMonth);
-  const monthTxs = getMonthTransactions(viewYear, viewMonth);
+  const monthTxs = getMonthTransactions(viewYear, viewMonth).filter(t => t.type !== 'fixed');
   const stats    = getStats(monthTxs);
   const totalAvailable = carryOver + stats.received;
   const currentBalance = totalAvailable - stats.spent;
